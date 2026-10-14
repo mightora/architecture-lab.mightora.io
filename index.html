@@ -65,4 +65,15 @@ const originalFetch=window.fetch.bind(window);window.fetch=async(...args)=>{cons
 <mightora-footer><div class="container"><div class="footer-bottom"><div class="footer-copy">Architecture Lab by <a href="https://mightora.io" target="_blank" rel="noopener">Mightora</a>. Free to explore. Built with credited open-source projects.</div><div class="footer-bottom-links"><a href="#credits">Project credits</a><a href="./THIRD-PARTY-NOTICES.txt">Licences</a></div></div></div></mightora-footer>
 <div id="toast" role="status" aria-live="polite" hidden></div>
 <script type="module" src="/src/main.js"></script>
+
+<!-- Cloudflare Web Analytics: production only; no network traffic when opened locally/offline -->
+<script>
+  if (window.location.hostname === 'architecture-lab.mightora.io') {
+    const analyticsBeacon = document.createElement('script');
+    analyticsBeacon.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+    analyticsBeacon.defer = true;
+    analyticsBeacon.setAttribute('data-cf-beacon', '{"token":"54355574b7594d3d9d9946038d33925a","spa":true}');
+    document.head.appendChild(analyticsBeacon);
+  }
+</script>
 </body></html>
