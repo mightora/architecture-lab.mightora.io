@@ -1,3 +1,4 @@
+import {createPreviewFullscreen} from './preview-fullscreen.js';
 import {createPreviewFit} from './preview-fit.js';
 import {initMarkdownTool} from './markdown-tool.js';
 import './styles.css';
@@ -10,6 +11,7 @@ import {powerpoint,word} from './office.js';
 import {strToU8,strFromU8,deflateSync,inflateSync} from 'fflate';
 const $=id=>document.getElementById(id),esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 const previewFit=createPreviewFit($('preview-scroll'),$('preview'),{fitVisual:fitViewport,zoomVisual:zoomViewport});
+const previewFullscreen=createPreviewFullscreen($('preview-pane'),$('preview-fullscreen'),()=>previewFit.fit());
 let current=examples.find(e=>e.id==='christmas-menu-flow'),platform=platforms.find(p=>p.id==='mermaid'),rendering=false,queued=false,renderedSource='',renderedPlatform='',timer,toastTimer;
 const marks={plantuml:'PU',mermaid:'MM',graphviz:'GV',d2:'D2',vega:'VL',wavedrom:'WD',bpmn:'BP',drawio:'↗'};
 const sourceLinks={plantuml:'https://github.com/plantuml/plantuml',mermaid:'https://github.com/mermaid-js/mermaid',graphviz:'https://github.com/mdaines/viz-js',d2:'https://github.com/d2lang/d2/tree/6a7b4837838a3907604a1d9eec57ee98b6f3cd01',vega:'https://github.com/vega',wavedrom:'https://github.com/wavedrom/wavedrom',bpmn:'https://github.com/bpmn-io/bpmn-js',drawio:'https://github.com/jgraph/drawio'};

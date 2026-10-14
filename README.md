@@ -96,3 +96,5 @@ The document tool accepts GitHub-flavoured Markdown and diagram fences from all 
 Run `node scripts/check-markdown.mjs` and `python3 scripts/check-markdown-office.py` for conversion and Word package checks. Browser integration and desktop Word visual QA remain separate checks.
 
 Playground diagrams automatically fit both the width and height of the preview, including on browser resize. Zoom is relative to that fit; Fit restores the full diagram. Embedded BPMN and diagrams.net canvases use their native fit operations. `node scripts/check-preview-fit.mjs` checks sizing and interactions; browser visual QA remains separate.
+
+The preview toolbar includes Full screen / Exit full screen. Escape restores the playground; browsers without native fullscreen use a viewport overlay. The diagram fits the expanded preview automatically. Mermaid uses global `htmlLabels: false` for native SVG text, while the sanitizer also preserves safe XHTML labels inside SVG foreignObject. Regression checks run the actual Mermaid flowchart, state and sequence renderers with simulated DOM measurements; browser visual checks remain separate.

@@ -1,9 +1,10 @@
-import DOMPurify from 'dompurify';
+import {mermaidConfig} from './mermaid-config.js';
+import {cleanSVG} from './svg-sanitize.js';
+export {cleanSVG} from './svg-sanitize.js';
 import { rendererAssetUrl } from './renderer-assets.js';
 const base=rendererAssetUrl('',import.meta.env.BASE_URL,document.baseURI);
 const scripts=new Map();
 const script=url=>{if(!scripts.has(url))scripts.set(url,new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=url;s.onload=resolve;s.onerror=()=>{scripts.delete(url);s.remove();reject(new Error('Could not load the local renderer. Please reload.'));};document.head.append(s);}));return scripts.get(url);};
-export function cleanSVG(source){return DOMPurify.sanitize(source,{USE_PROFILES:{svg:true,svgFilters:true},ADD_TAGS:['foreignObject','div','span','p','br'],ADD_ATTR:['xmlns','xmlns:xlink'],FORBID_TAGS:['script','iframe','audio','video'],FORBID_ATTR:['onload','onclick','onerror']});}
 function localOnly(source){if(/!include|!import|https?:\/\/|file:\/\//i.test(source))throw new Error('Use self-contained diagram source here. Remote includes, links and images are disabled so diagram rendering stays local.');}
 let waveCounter=0;
 export function createRenderer(){
@@ -20,7 +21,7 @@ async function render(platform,source,target,onSource){
   svg=await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('The PlantUML render took too long. Try a smaller diagram.')),25000);plant.renderToString(source.split('\n'),s=>{clearTimeout(timer);resolve(s);},error=>{clearTimeout(timer);reject(new Error(error));});});
  }else if(platform==='mermaid'){
   const {default:mermaid}=await import('mermaid');
-  mermaid.initialize({startOnLoad:false,securityLevel:'strict',theme:'base',themeVariables:{primaryColor:'#ecfdf5',primaryTextColor:'#111827',primaryBorderColor:'#059669',lineColor:'#64748b',fontFamily:'Arial'},flowchart:{htmlLabels:false},sequence:{useMaxWidth:false},suppressErrorRendering:true});
+  mermaid.initialize(mermaidConfig);
   svg=(await mermaid.render('m'+crypto.randomUUID().replaceAll('-',''),source)).svg;
  }else if(platform==='graphviz'){
   localOnly(source);viz ||= await (await import('@viz-js/viz')).instance();svg=viz.renderString(source,{format:'svg'});
