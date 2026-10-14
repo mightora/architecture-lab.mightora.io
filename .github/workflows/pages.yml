@@ -22,6 +22,7 @@ jobs:
       - run: npm ci
       - run: bash scripts/prepare-vendor.sh
       - run: node scripts/check-renderer-assets.mjs
+      - run: node scripts/check-preview-fit.mjs
       - run: node scripts/check-scenarios.mjs
       - run: node scripts/check-scenario-ui.mjs
       - run: node scripts/check.mjs

@@ -8,7 +8,7 @@ import versions from '../src/versions.json' with {type:'json'};
 // stubbed; this is not browser layout, rendering or download verification.
 const dom=new JSDOM(fs.readFileSync('index.html','utf8'),{url:'https://example.test/',runScripts:'outside-only'});
 const w=dom.window;w.HTMLElement.prototype.scrollIntoView=function(){};
-Object.assign(w,{initMarkdownTool:()=>{},platforms,examples,typeGuide,scenarios,scenarioFor,questionFor,limitFor,filterExamples,versions,render:async(_,source,target)=>{target.innerHTML='<svg viewBox="0 0 100 100"></svg>';}});
+Object.assign(w,{initMarkdownTool:()=>{},fitViewport:()=>{},zoomViewport:()=>{},createPreviewFit:()=>({fit(){},update(){},zoomBy(){}}),platforms,examples,typeGuide,scenarios,scenarioFor,questionFor,limitFor,filterExamples,versions,render:async(_,source,target)=>{target.innerHTML='<svg viewBox="0 0 100 100"></svg>';}});
 const source=fs.readFileSync('src/main.js','utf8').replace(/^import .*;\n/gm,'');
 w.eval(source);await new Promise(resolve=>setTimeout(resolve,0));const d=w.document;
 assert.equal(d.querySelector('#scenario-filter').value,'Christmas dinner');assert.equal(d.querySelectorAll('#example-grid article').length,12);assert(d.querySelector('#scenario-story').textContent.includes('The Host'));

@@ -94,3 +94,5 @@ For a fresh local checkout, run `npm ci`, `bash scripts/prepare-vendor.sh`, then
 The document tool accepts GitHub-flavoured Markdown and diagram fences from all eight platforms, plus SVG. It generates real editable DOCX paragraphs, headings, native lists, tables and drawing groups. Supported fence aliases and limits are shown in the UI. Unsupported diagrams retain source and diagnostic text; raw HTML is text and images become alt-text placeholders. No remote diagram resources or document uploads are used. Source inclusion is optional for successfully converted diagrams. Single-backtick inline code remains ordinary text.
 
 Run `node scripts/check-markdown.mjs` and `python3 scripts/check-markdown-office.py` for conversion and Word package checks. Browser integration and desktop Word visual QA remain separate checks.
+
+Playground diagrams automatically fit both the width and height of the preview, including on browser resize. Zoom is relative to that fit; Fit restores the full diagram. Embedded BPMN and diagrams.net canvases use their native fit operations. `node scripts/check-preview-fit.mjs` checks sizing and interactions; browser visual QA remains separate.

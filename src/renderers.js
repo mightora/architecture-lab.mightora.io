@@ -42,6 +42,7 @@ async function render(platform,source,target,onSource){
   const u=base+'vendor/drawio/index.html?embed=1&proto=json&offline=1&local=1&spin=1&ui=kennedy&libraries=0&saveAndExit=0&noSaveBtn=1&noExitBtn=1&lang=en';
   let readyResolve,readyReject;const ready=new Promise((resolve,reject)=>{readyResolve=resolve;readyReject=reject;});const readyTimer=setTimeout(()=>readyReject(new Error('The diagrams.net editor took too long to initialise.')),25000);drawioFrame.src=u;drawioListener=event=>{if(event.origin!==location.origin||event.source!==drawioFrame?.contentWindow)return;let data;try{data=JSON.parse(event.data);}catch{return;}
    if(data.event==='init'){drawioFrame.contentWindow.postMessage(JSON.stringify({action:'load',xml:source,autosave:1}),location.origin);clearTimeout(readyTimer);readyResolve();}
+   if(data.event==='load'&&!data.error)drawioFrame.contentWindow.postMessage(JSON.stringify({action:'fit',border:24}),location.origin);
    if(data.event==='autosave'||data.event==='save')onSource(data.xml);
   };window.addEventListener('message',drawioListener);target.append(drawioFrame);await ready;return;
  }
@@ -59,6 +60,8 @@ async function exportSVG(target){
 async function graphvizExport(source,format){localOnly(source);viz ||= await (await import('@viz-js/viz')).instance();return viz.renderString(source,{format});}
 
 function dispose(){bpmn?.destroy();vegaView?.finalize();if(drawioListener)window.removeEventListener('message',drawioListener);drawioFrame?.remove();bpmn=null;vegaView=null;drawioListener=null;drawioFrame=null;}
-return {render,exportSVG,graphvizExport,dispose};
+function fitViewport(){if(bpmn)bpmn.get('canvas').zoom('fit-viewport');if(drawioFrame)drawioFrame.contentWindow.postMessage(JSON.stringify({action:'fit',border:24}),location.origin);}
+function zoomViewport(delta){if(bpmn){const canvas=bpmn.get('canvas');canvas.zoom(Math.max(.05,canvas.zoom()*(delta>0?1.2:1/1.2)),'auto');}}
+return {render,exportSVG,graphvizExport,dispose,fitViewport,zoomViewport};
 }
-export const {render,exportSVG,graphvizExport}=createRenderer();
+export const {render,exportSVG,graphvizExport,fitViewport,zoomViewport}=createRenderer();

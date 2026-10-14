@@ -1,14 +1,16 @@
+import {createPreviewFit} from './preview-fit.js';
 import {initMarkdownTool} from './markdown-tool.js';
 import './styles.css';
 import {platforms,examples,typeGuide} from './catalogue.js';
 import versions from './versions.json';
 import {scenarios,scenarioFor,questionFor,limitFor,filterExamples} from './scenarios.js';
-import {render,exportSVG,cleanSVG,graphvizExport} from './renderers.js';
+import {render,exportSVG,cleanSVG,graphvizExport,fitViewport,zoomViewport} from './renderers.js';
 import {styledSnapshot,svgToModel} from './svg-model.js';
 import {powerpoint,word} from './office.js';
 import {strToU8,strFromU8,deflateSync,inflateSync} from 'fflate';
 const $=id=>document.getElementById(id),esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
-let current=examples.find(e=>e.id==='christmas-menu-flow'),platform=platforms.find(p=>p.id==='mermaid'),rendering=false,queued=false,renderedSource='',renderedPlatform='',zoom=1,timer,toastTimer;
+const previewFit=createPreviewFit($('preview-scroll'),$('preview'),{fitVisual:fitViewport,zoomVisual:zoomViewport});
+let current=examples.find(e=>e.id==='christmas-menu-flow'),platform=platforms.find(p=>p.id==='mermaid'),rendering=false,queued=false,renderedSource='',renderedPlatform='',timer,toastTimer;
 const marks={plantuml:'PU',mermaid:'MM',graphviz:'GV',d2:'D2',vega:'VL',wavedrom:'WD',bpmn:'BP',drawio:'↗'};
 const sourceLinks={plantuml:'https://github.com/plantuml/plantuml',mermaid:'https://github.com/mermaid-js/mermaid',graphviz:'https://github.com/mdaines/viz-js',d2:'https://github.com/d2lang/d2/tree/6a7b4837838a3907604a1d9eec57ee98b6f3cd01',vega:'https://github.com/vega',wavedrom:'https://github.com/wavedrom/wavedrom',bpmn:'https://github.com/bpmn-io/bpmn-js',drawio:'https://github.com/jgraph/drawio'};
 function art(type){
@@ -43,14 +45,14 @@ $('credits-list').innerHTML=platforms.map(p=>`<div class="credit-row"><div><h3>$
 function notice(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,4000);}
 function error(message){$('error').textContent=message;$('error').hidden=!message;}
 function updateCount(){$('source-count').textContent=`${$('source').value.split('\n').length} lines · ${$('source').value.length.toLocaleString()} characters`;}
-function selectExample(id,scroll=false){current=examples.find(e=>e.id===id)||examples[0];platform=platforms.find(p=>p.id===current.platform);$('view-context').innerHTML=`<div><span>${esc(current.scenario)}</span><strong>${esc(questionFor(current))}</strong><p>${esc(current.purpose)}</p></div><p><strong>This view leaves out:</strong> ${esc(limitFor(current))}</p>`;$('play-platform').value=platform.id;document.querySelectorAll('.graphviz-extra').forEach(b=>b.hidden=platform.id!=='graphviz');$('play-example').innerHTML=examples.filter(e=>e.platform===platform.id).map(e=>`<option value="${e.id}">${esc(e.type)} — ${esc(e.title)}</option>`).join('');$('play-example').value=current.id;$('source').value=current.source;$('source-language').textContent=platform.language;$('platform-note').textContent=platform.note;$('platform-docs').href=platform.docs;updateCount();zoom=1;$('preview').style.transform='';error('');runRender();if(scroll)$('playground').scrollIntoView({behavior:'smooth'});}
+function selectExample(id,scroll=false){current=examples.find(e=>e.id===id)||examples[0];platform=platforms.find(p=>p.id===current.platform);$('view-context').innerHTML=`<div><span>${esc(current.scenario)}</span><strong>${esc(questionFor(current))}</strong><p>${esc(current.purpose)}</p></div><p><strong>This view leaves out:</strong> ${esc(limitFor(current))}</p>`;$('play-platform').value=platform.id;for(const id of ['zoom-in','zoom-out']){$(id).disabled=platform.id==='drawio';$(id).title=platform.id==='drawio'?'Use the diagrams.net toolbar to zoom':'Zoom relative to the fitted diagram';}document.querySelectorAll('.graphviz-extra').forEach(b=>b.hidden=platform.id!=='graphviz');$('play-example').innerHTML=examples.filter(e=>e.platform===platform.id).map(e=>`<option value="${e.id}">${esc(e.type)} — ${esc(e.title)}</option>`).join('');$('play-example').value=current.id;$('source').value=current.source;$('source-language').textContent=platform.language;$('platform-note').textContent=platform.note;$('platform-docs').href=platform.docs;updateCount();previewFit.fit();error('');runRender();if(scroll)$('playground').scrollIntoView({behavior:'smooth'});}
 function applyFont(){const font=$('font').value;if(font)$('preview').querySelectorAll('svg text,svg tspan,svg foreignObject div').forEach(el=>el.style.fontFamily=font);}
 async function runRender(){
  if(rendering){queued=true;return;}rendering=true;queued=false;const s=$('source').value,p=platform.id;
  $('render').disabled=true;$('render-status').textContent='Rendering on your device…';error('');const began=performance.now();
  try{if(s.length>150000)throw new Error('Please keep diagrams below 150,000 characters.');$('preview').classList.remove('visual-preview');
  await render(p,s,$('preview'),xml=>{if(platform.id===p){$('source').value=xml;renderedSource=xml;updateCount();}});
- renderedSource=s;renderedPlatform=p;applyFont();$('render-status').textContent=`${platforms.find(x=>x.id===p).name} · ${Math.round(performance.now()-began)} ms · ready`;
+ renderedSource=s;renderedPlatform=p;applyFont();previewFit.fit();$('render-status').textContent=`${platforms.find(x=>x.id===p).name} · ${Math.round(performance.now()-began)} ms · ready`;
  }catch(e){renderedSource='';renderedPlatform='';error(e.message||String(e));$('render-status').textContent='Check the source and try again';}
  finally{rendering=false;$('render').disabled=false;if(queued)runRender();}
 }
@@ -104,12 +106,12 @@ document.querySelectorAll('[data-browse]').forEach(b=>b.addEventListener('click'
 $('play-platform').addEventListener('change',()=>selectExample(examples.find(e=>e.platform===$('play-platform').value).id));$('play-example').addEventListener('change',()=>selectExample($('play-example').value));$('reset').addEventListener('click',()=>selectExample(current.id));$('render').addEventListener('click',runRender);
 $('source').addEventListener('input',()=>{updateCount();$('render-status').textContent='Source changed · render to update';if($('auto-render').checked){clearTimeout(timer);timer=setTimeout(runRender,800);}});$('auto-render').addEventListener('change',()=>{if($('auto-render').checked)runRender();});
 $('source').addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();const t=e.target,s=t.selectionStart;t.setRangeText('  ',s,t.selectionEnd,'end');t.dispatchEvent(new Event('input'));}if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();runRender();}});
-$('font').addEventListener('change',()=>{$('font').value?applyFont():runRender();});
+$('font').addEventListener('change',()=>{if($('font').value){applyFont();previewFit.update();}else runRender();});
 $('copy-source').addEventListener('click',async()=>{try{await copy($('source').value);notice('Source copied.');}catch{error('Your browser blocked clipboard access. Select the source to copy it.');}});
 $('share').addEventListener('click',async()=>{try{const data=deflateSync(strToU8(JSON.stringify(project()))),encoded=btoa(String.fromCharCode(...data)).replaceAll('+','-').replaceAll('/','_').replaceAll('=',''),url=location.origin+location.pathname+'#project='+encoded;if(url.length>28000)throw new Error('This diagram is too large for a reliable share link. Export Project JSON instead.');await copy(url);notice('Share link copied. Anyone with the link can read the diagram source.');}catch(e){error(e.message);}});
 $('save-local').addEventListener('click',()=>{try{localStorage.setItem('mightora-architecture-project',JSON.stringify(project()));notice('Saved on this device.');}catch{error('Your browser could not save this project. Download Project JSON instead.');}});$('load-local').addEventListener('click',()=>{try{const data=localStorage.getItem('mightora-architecture-project');if(!data)throw new Error('No saved project on this device yet.');restore(JSON.parse(data));notice('Saved project restored.');}catch(e){error(e.message);}});
 $('import-file').addEventListener('change',async e=>{try{const f=e.target.files[0];if(!f)return;if(f.size>300000)throw new Error('Please import a file smaller than 300 KB.');const source=await f.text();if(f.name.endsWith('.architecture.json'))restore(JSON.parse(source));else{const ext=f.name.split('.').pop().toLowerCase(),id={puml:'plantuml',plantuml:'plantuml',mmd:'mermaid',dot:'graphviz',d2:'d2',bpmn:'bpmn',drawio:'drawio'}[ext];if(id)selectExample(examples.find(e=>e.platform===id).id);$('source').value=source;updateCount();runRender();}notice('File imported.');}catch(e){error(e.message);}finally{e.target.value='';}});
-$('zoom-in').addEventListener('click',()=>{zoom=Math.min(3,zoom+.2);$('preview').style.transform=`scale(${zoom})`;});$('zoom-out').addEventListener('click',()=>{zoom=Math.max(.4,zoom-.2);$('preview').style.transform=`scale(${zoom})`;});$('zoom-reset').addEventListener('click',()=>{zoom=1;$('preview').style.transform='';});
+$('zoom-in').addEventListener('click',()=>previewFit.zoomBy(.2));$('zoom-out').addEventListener('click',()=>previewFit.zoomBy(-.2));$('zoom-reset').addEventListener('click',()=>{previewFit.fit();});
 document.querySelectorAll('[data-export]').forEach(b=>b.addEventListener('click',()=>doExport(b.dataset.export,b)));
 $('scenario-filter').value='Christmas dinner';
 const sharedScenario=scenarios.find(s=>s.id===new URLSearchParams(location.search).get('scenario'));if(sharedScenario){$('scenario-filter').value=sharedScenario.name;current=examples.find(e=>e.id===sharedScenario.start);}
