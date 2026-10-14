@@ -6,7 +6,7 @@ for(const file of ['plantuml.js','viz-global.js','emoji.js','openiconic.js','the
 copy('node_modules/@d2lang/d2/dist/browser/index.js','public/vendor/d2/index.js');
 copy('node_modules/wavedrom/wavedrom.min.js','public/vendor/wavedrom/wavedrom.min.js');
 copy('node_modules/wavedrom/skins/default.js','public/vendor/wavedrom/default.js');
-const packages=['@plantuml/core','@d2lang/d2','@viz-js/viz','mermaid','vega','vega-lite','vega-embed','wavedrom','bpmn-js','fflate','svg-pathdata','dompurify','marked'];
+const packages=['@plantuml/core','@d2lang/d2','@viz-js/viz','mermaid','vega','vega-lite','vega-embed','wavedrom','bpmn-js','fflate','svg-pathdata','dompurify','marked','@toast-ui/editor'];
 let notices='Mightora Architecture Lab — third-party notices\n\n';
 const versions={};
 for(const name of packages){let dir=`node_modules/${name}`;const pkg=JSON.parse(fs.readFileSync(`${dir}/package.json`));versions[name]=pkg.version;notices+=`\n===== ${name} ${pkg.version} =====\nSource: ${typeof pkg.repository==='string'?pkg.repository:pkg.repository?.url||pkg.homepage||''}\n`;

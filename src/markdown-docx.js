@@ -10,11 +10,12 @@ export function validateDiagramSource(diagram){
  if(/\burl\s*\(\s*["']?\s*(?![#"'\s])|(?:href|src|image|icon)\s*[:=]\s*["']?\s*\/\//i.test(inspect))throw new Error('External resource URLs are disabled.');
  if(diagram.platform==='drawio'&&/<diagram\b/i.test(inspect)&&!/<mxGraphModel\b/i.test(inspect))throw new Error('Use uncompressed diagrams.net XML so external resources can be checked.');
 }
+export const MARKDOWN_LIMITS={characters:2000000,diagrams:200,diagramCharacters:100000};
 export function parseMarkdown(source){
- if(source.length>300000)throw new Error('Use a Markdown document smaller than 300,000 characters.');
+ if(source.length>MARKDOWN_LIMITS.characters)throw new Error('Use a Markdown document smaller than 2,000,000 characters.');
  const tokens=marked.lexer(source,{gfm:true}),diagrams=[];
- marked.walkTokens(tokens,t=>{if(t.type==='code'){const language=(t.lang||'').trim().split(/\s/)[0].toLowerCase(),platform=Object.hasOwn(diagramLanguages,language)?diagramLanguages[language]:undefined;if(platform){if(t.text.length>100000)throw new Error('A diagram block exceeds 100,000 characters.');t.diagramId=diagrams.length;diagrams.push({id:t.diagramId,language,platform,source:t.text});}}});
- if(diagrams.length>20)throw new Error('Convert up to 20 diagrams per document. Split larger documents into parts.');
+ marked.walkTokens(tokens,t=>{if(t.type==='code'){const language=(t.lang||'').trim().split(/\s/)[0].toLowerCase(),platform=Object.hasOwn(diagramLanguages,language)?diagramLanguages[language]:undefined;if(platform){if(t.text.length>MARKDOWN_LIMITS.diagramCharacters)throw new Error('A diagram block exceeds 100,000 characters.');t.diagramId=diagrams.length;diagrams.push({id:t.diagramId,language,platform,source:t.text});}}});
+ if(diagrams.length>MARKDOWN_LIMITS.diagrams)throw new Error('Convert up to 200 diagrams per document. Split larger documents into parts.');
  const renderer=new Renderer();renderer.code=t=>t.diagramId!==undefined?`<figure data-markdown-diagram="${t.diagramId}"><figcaption>${escapeXML(t.lang)} diagram</figcaption><div class="md-diagram-output">Waiting to render…</div></figure>`:`<pre><code>${escapeXML(t.text)}</code></pre>`;
  renderer.image=t=>`<span>[Image: ${escapeXML(t.text||'no description')} — images are not fetched]</span>`;
  renderer.html=t=>`<pre>${escapeXML(t.text)}</pre>`;

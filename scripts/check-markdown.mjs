@@ -17,8 +17,10 @@ for(const language of Object.keys(diagramLanguages)){assert.equal(parseMarkdown(
 for(const example of examples){const p=parseMarkdown('```'+example.platform+'\n'+example.source+'\n```');assert.equal(p.diagrams.length,1);validateDiagramSource(p.diagrams[0]);}
 assert.equal(parseMarkdown('```constructor\ntext\n```').diagrams.length,0);
 assert.equal(parseMarkdown('`mermaid: graph TD;A-->B`\n\n```unknown\nthing\n```').diagrams.length,0);
-assert.throws(()=>parseMarkdown('x'.repeat(300001)));assert.throws(()=>parseMarkdown(Array(21).fill('```mermaid\nA\n```').join('\n\n')));
+assert.equal(parseMarkdown(Array(200).fill('```mermaid\nA\n```').join('\n\n')).diagrams.length,200);assert.throws(()=>parseMarkdown('x'.repeat(2000001)));assert.throws(()=>parseMarkdown(Array(201).fill('```mermaid\nA\n```').join('\n\n')));
 for(const source of ['<svg xmlns="http://www.w3.org/2000/svg"><image href="https://example.test/x"/></svg>','<svg><style>@import "https://example.test/font.css"</style></svg>','<svg><use href="data:image/svg+xml,x"/></svg>'])assert.throws(()=>validateDiagramSource({platform:'svg',source}));
 assert.throws(()=>validateDiagramSource({platform:'drawio',source:'<mxfile><diagram>encoded-content</diagram></mxfile>'}));assert.throws(()=>validateDiagramSource({platform:'drawio',source:'<mxGraphModel><mxCell style="image=https://example.test/x"/></mxGraphModel>'}));
 validateDiagramSource({platform:'svg',source:'<svg xmlns="http://www.w3.org/2000/svg"><use href="#shape"/></svg>'});
 console.log('Markdown: all platform fence aliases, 89 example sources, native Word text/tables/lists, nine unique editable drawing groups, source fallbacks, limits and external-resource checks passed.');dom.window.close();
+
+const large=parseMarkdown(Array(200).fill('```mermaid\nA\n```').join('\n\n'));const largeResults=new Map(large.diagrams.map(d=>[d.id,{model,credit:'Credited renderer'}]));fs.writeFileSync('checks/markdown-200-diagrams.docx',markdownWord(large,largeResults));const largeXml=strFromU8(unzipSync(markdownWord(large,largeResults))['word/document.xml']);assert.equal((largeXml.match(/<w:drawing>/g)||[]).length,200);console.log('Word generation accepts 200 native editable diagram groups.');

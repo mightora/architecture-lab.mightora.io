@@ -30,3 +30,5 @@ The gallery defaults to scenario-first exploration with a shared brief, consiste
 All people, events, budgets and dates are illustrative teaching examples.
 
 Markdown to Word: #markdown-word converts Markdown headings, lists, tables and code to editable DOCX. Use language-tagged fenced blocks for Mermaid, PlantUML, D2, Graphviz/DOT, Vega/Vega-Lite, WaveDrom, BPMN, diagrams.net/draw.io and SVG. Unsupported diagrams are retained as source with diagnostic text. Single-backtick inline code remains text. All document processing is local; external diagram resources and image fetches are disabled.
+
+The Markdown document tool supports 200 diagrams and 2,000,000 characters. Markdown / Visual editor tabs provide source and WYSIWYG editing, with Full screen / Exit full screen. Visual editing preserves diagram fences. Conversion includes progress and a Stop button. TOAST UI usage statistics are disabled; no document content is uploaded.

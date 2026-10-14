@@ -37,6 +37,8 @@ jobs:
       - run: python3 scripts/check-office.py
       - run: node scripts/check-markdown.mjs
       - run: node scripts/check-markdown-ui.mjs
+      - run: node scripts/check-markdown-editor.mjs
+      - run: node scripts/check-visual-roundtrip.mjs
       - run: python3 scripts/check-markdown-office.py
       - run: npm run build
       - run: touch dist/.nojekyll

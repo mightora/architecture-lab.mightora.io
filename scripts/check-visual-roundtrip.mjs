@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {JSDOM} from 'jsdom';
+import {parseMarkdown,diagramLanguages} from '../src/markdown-docx.js';
+import {examples} from '../src/catalogue.js';
+const dom=new JSDOM('<!doctype html><html><body><div id="editor"></div></body></html>',{pretendToBeVisual:true,url:'https://example.test/'}),w=dom.window;
+for(const name of ['window','document','DOMParser','Node','HTMLElement','Element','Text','MutationObserver','getComputedStyle','Selection','Range'])globalThis[name]=name==='window'?w:name==='getComputedStyle'?w.getComputedStyle.bind(w):w[name];globalThis.self=w;Object.defineProperty(globalThis,'navigator',{value:w.navigator,configurable:true});
+w.matchMedia=()=>({matches:false,addListener(){},removeListener(){}});w.Range.prototype.getBoundingClientRect=()=>({x:0,y:0,width:0,height:0,top:0,left:0,bottom:0,right:0});w.Range.prototype.getClientRects=()=>[];w.HTMLElement.prototype.scrollIntoView=function(){};
+const {default:Editor}=await import('@toast-ui/editor');
+const langs=['mermaid','plantuml','d2','dot','vega-lite','wavedrom','bpmn','drawio','svg'];
+const md='# Plan\n\n**Formatted text**\n\n| Person | Task |\n| --- | --- |\n| Host | Cook |\n\n'+langs.map(l=>'```'+l+'\n'+(l==='svg'?'<svg xmlns="http://www.w3.org/2000/svg"><text>Hello</text></svg>':examples.find(e=>e.platform===diagramLanguages[l]).source)+'\n```').join('\n\n');
+const editor=new Editor({el:w.document.getElementById('editor'),height:'560px',initialEditType:'wysiwyg',hideModeSwitch:true,usageStatistics:false,autofocus:false,initialValue:md});
+const output=editor.getMarkdown(),parsed=parseMarkdown(output);assert.equal(parsed.diagrams.length,9);assert.deepEqual(parsed.diagrams.map(d=>d.language),langs);assert.deepEqual(parsed.diagrams.map(d=>d.source),parseMarkdown(md).diagrams.map(d=>d.source));assert(output.includes('Formatted text'));assert(parsed.tokens.some(t=>t.type==='table'));editor.destroy();dom.window.close();console.log('Actual TOAST UI WYSIWYG editor retains nine diagram fence languages and their source, formatted text and a table on Markdown serialization. DOM layout is simulated.');

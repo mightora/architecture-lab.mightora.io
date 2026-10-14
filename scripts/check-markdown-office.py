@@ -20,3 +20,8 @@ assert doc.element.xpath('//w:rPr/w:i')
 assert len(doc.element.xpath('//w:drawing//w:t[contains(text(), "Editable diagram label")]'))==9
 assert doc.element.xpath('//w:numPr')
 print('Mixed Markdown DOCX opens with nine native editable diagram groups, heading styles, table cells, lists and retained failure source.')
+
+large=Document('checks/markdown-200-diagrams.docx')
+assert len(large.inline_shapes)==200
+assert len(large.element.xpath('//w:drawing//w:t[contains(text(), "Editable diagram label")]'))==200
+print('200-diagram DOCX opens with all native editable drawing groups and labels.')
