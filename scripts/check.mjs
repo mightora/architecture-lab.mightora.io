@@ -6,7 +6,7 @@ import {unzipSync,strFromU8} from 'fflate';
 import {instance} from '@viz-js/viz';
 import {D2} from '@d2lang/d2';
 import {compile} from 'vega-lite';
-assert.equal(platforms.length,8);assert.equal(examples.length,89);assert.equal(new Set(examples.map(e=>e.id)).size,examples.length);
+assert.equal(platforms.length,8);assert.equal(examples.length,101);assert.equal(new Set(examples.map(e=>e.id)).size,examples.length);
 for(const e of examples){assert(platforms.some(p=>p.id===e.platform));assert(e.source.length>10);}
 const viz=await instance();for(const e of examples.filter(e=>e.platform==='graphviz')){const svg=viz.renderString(e.source,{format:'svg'});assert(svg.includes('<svg'));fs.mkdirSync('checks',{recursive:true});fs.writeFileSync(`checks/${e.id}.svg`,svg);console.log('Graphviz:',e.id);}
 const d2=new D2();try{for(const e of examples.filter(e=>e.platform==='d2')){const result=await d2.compile(e.source);const svg=await d2.render(result.diagram,result.renderOptions);assert(svg.includes('<svg'));fs.writeFileSync(`checks/${e.id}.svg`,svg);console.log('D2:',e.id);}}finally{await d2.dispose();}

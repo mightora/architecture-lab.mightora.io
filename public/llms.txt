@@ -2,7 +2,7 @@
 
 A free static browser application for exploring solution architecture diagram types and open-source platforms.
 
-- 89 illustrative examples across PlantUML, Mermaid, Graphviz, D2, Vega-Lite, WaveDrom, BPMN/bpmn-js and diagrams.net.
+- 101 illustrative examples across PlantUML, Mermaid, Graphviz, D2, Vega-Lite, WaveDrom, BPMN/bpmn-js and diagrams.net.
 - Why diagrams as code: /#why-code
 - ArchiMate-style enterprise views and Archi resource: /#archimate
 - Diagram guide: /#guide
@@ -32,3 +32,5 @@ All people, events, budgets and dates are illustrative teaching examples.
 Markdown to Word: #markdown-word converts Markdown headings, lists, tables and code to editable DOCX. Use language-tagged fenced blocks for Mermaid, PlantUML, D2, Graphviz/DOT, Vega/Vega-Lite, WaveDrom, BPMN, diagrams.net/draw.io and SVG. Unsupported diagrams are retained as source with diagnostic text. Single-backtick inline code remains text. All document processing is local; external diagram resources and image fetches are disabled.
 
 The Markdown document tool supports 200 diagrams and 2,000,000 characters. Markdown / Visual editor tabs provide source and WYSIWYG editing, with Full screen / Exit full screen. Visual editing preserves diagram fences. Conversion includes progress and a Stop button. TOAST UI usage statistics are disabled; no document content is uploaded.
+
+Public application service: ?scenario=public-application-service#examples provides six fictional architecture views with PlantUML and alternative implementations: core concepts model, solution capabilities map, high-level data flow diagram, external user logical flow, workload separation and integration points, physical deployment architecture. No customer identifiers are included. Deployment assumes existing infrastructure and excludes runtime flows and migration.

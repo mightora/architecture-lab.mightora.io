@@ -4,7 +4,7 @@ A free static solution architecture diagram gallery and playground. All eight en
 
 ## Included
 
-89 editable examples across PlantUML, Mermaid, Graphviz/Viz.js, D2, Vega-Lite, WaveDrom, BPMN/bpmn-js and diagrams.net. A diagram-type guide explains purposes and use cases. Platform home pages, documentation, creators and licence information are credited.
+101 editable examples across PlantUML, Mermaid, Graphviz/Viz.js, D2, Vega-Lite, WaveDrom, BPMN/bpmn-js and diagrams.net. A diagram-type guide explains purposes and use cases. Platform home pages, documentation, creators and licence information are credited.
 
 Source editing / live preview, BPMN and diagrams.net visual editing, import, browser-local saving, compressed snapshot share links, font selection and PNG resolution controls.
 
@@ -75,7 +75,7 @@ Every export leaves a persistent direct download link. On browsers that support 
 
 ## Scenario-first exploration
 
-The default gallery starts with Christmas dinner. Six guided stories (five everyday scenarios plus the professional service request) have a shared brief, people, assumptions and question shortcuts. The three new collections—Birthday party, Moving house and Online order—each contain ten complementary views. All 89 examples remain available through scenario, diagram-type and platform filters.
+The default gallery starts with Christmas dinner. Seven guided stories (five everyday scenarios plus two professional scenarios) have a shared brief, people, assumptions and question shortcuts. The three new collections—Birthday party, Moving house and Online order—each contain ten complementary views. All 101 examples remain available through scenario, diagram-type and platform filters.
 
 `src/scenarios.js` owns the shared briefs, question/limitation guidance and pure filter function. `src/scenario-examples.js` uses one scenario definition to generate consistent context, process, sequence, lifecycle, plan, dependency, information, budget, BPMN and responsibility views. Do not change actor names or budget figures independently of the story brief.
 
@@ -100,3 +100,7 @@ Playground diagrams automatically fit both the width and height of the preview, 
 The preview toolbar includes Full screen / Exit full screen. Escape restores the playground; browsers without native fullscreen use a viewport overlay. The diagram fits the expanded preview automatically. Mermaid uses global `htmlLabels: false` for native SVG text, while the sanitizer also preserves safe XHTML labels inside SVG foreignObject. Regression checks run the actual Mermaid flowchart, state and sequence renderers with simulated DOM measurements; browser visual checks remain separate.
 
 Markdown conversion supports 200 diagrams per document and 2,000,000 characters (100,000 per diagram). It renders sequentially, reports progress and can stop after the current diagram. The document editor switches between exact Markdown source and TOAST UI WYSIWYG formatting, preserves all supported diagram fence languages, disables telemetry and expands to full screen. Unedited view switching preserves the original Markdown; visual edits may normalise formatting. Images/raw HTML remain in source mode to prevent embedded resource loads.
+
+## Fictional application-service architecture views
+
+The Public application service scenario adds six requested views in PlantUML plus Mermaid, Graphviz or D2 alternatives: core concepts, solution capabilities, high-level data flow, external user logical flow, workload separation/integration, and physical deployment. All names and identifiers are fictional; no supplied customer/system identifiers are stored. Concept cardinalities are teaching assumptions. Submitted documents remain private; publication requires an explicit approved copy. Identity-policy relationships are separate from network routing. Physical deployment assumes provisioned tenants/subscriptions/environments and shows artefact placement rather than runtime calls. Existing Azure B2C is retained as an assumption for an existing identity tenant; the sample is not a new-tenant recommendation. The document API is illustrative, not a configured production integration.

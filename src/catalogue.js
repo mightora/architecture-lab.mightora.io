@@ -1,3 +1,4 @@
+import {solutionExamples} from './solution-examples.js';
 import {scenarioExamples} from './scenario-examples.js';
 import {everydayExamples} from './everyday-examples.js';
 export const platforms = [
@@ -24,6 +25,7 @@ function bpmn(name,steps){
 }
 function drawio(labels,edgeLabels=['Submit','Persist']){return `<mxfile host="Mightora"><diagram id="architecture" name="Architecture"><mxGraphModel dx="900" dy="600" grid="1" gridSize="10" page="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/>${labels.map((label,i)=>`<mxCell id="n${i}" value="${label}" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#ecfdf5;strokeColor=#059669;fontColor=#111827;fontSize=16;" vertex="1" parent="1"><mxGeometry x="${60+i*210}" y="140" width="170" height="80" as="geometry"/></mxCell>`).join('')}${labels.slice(1).map((_,i)=>`<mxCell id="e${i}" value="${edgeLabels[i]||""}" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=block;" edge="1" parent="1" source="n${i}" target="n${i+1}"><mxGeometry relative="1" as="geometry"/></mxCell>`).join('')}</root></mxGraphModel></diagram></mxfile>`;}
 export const examples=[
+ ...solutionExamples({e,uml}),
 
  e('pu-components','plantuml','Component','Service request architecture','Show system responsibilities, interfaces and the services involved in delivering a capability.',uml('skinparam componentStyle rectangle\nactor "Case worker" as user\ncomponent "Power Apps" as app\ncomponent "Power Automate" as flow\ndatabase "Dataverse" as data\ncomponent "Notification service" as mail\nuser --> app : Submit request\napp --> data : Store case\napp --> flow : Start approval\nflow --> data : Update status\nflow --> mail : Notify requester'),{level:'Intermediate'}),
  e('pu-sequence','plantuml','Sequence','What happens after Submit?','Explain message ordering across systems, including calls and responses.',uml('actor Requester\nparticipant "Power Apps" as App\nparticipant "Power Automate" as Flow\ndatabase Dataverse\nRequester -> App : Submit request\nApp -> Dataverse : Create case\nDataverse --> App : Case ID\nApp -> Flow : Start approval\nFlow -> Dataverse : Set approved\nFlow --> Requester : Confirmation')),
@@ -64,6 +66,12 @@ export const examples=[
  e('drawio-integration','drawio','Visual architecture','Sketch an integration','Arrange an integration landscape using native shapes and connectors.',drawio(['Power Automate','Integration API','Service Bus']),{scenario:'Integration'})
 ];
 export const typeGuide=[
+ ['Core concepts model','Business vocabulary and relationships','Agree shared concepts and example cardinalities before selecting storage structures.','PlantUML, Mermaid'],
+ ['Solution capabilities map','What the solution enables','Group stable business abilities and discuss scope and ownership without implying a workflow.','PlantUML, Graphviz'],
+ ['High-level data flow','Information movements and stores','Trace data inputs, transformations, publication boundaries and outputs.','PlantUML, Mermaid'],
+ ['User logical flow','Sequence of user interactions','Show browsing, sign-in, validation, submission and notification in order.','PlantUML, Mermaid'],
+ ['Workload separation','Responsibilities and integration boundaries','Separate workloads and show information or identity relationships. Excludes migration and provisioning.','PlantUML, D2'],
+ ['Physical deployment architecture','Resource and artefact placement','Locate resources in existing subscriptions, tenants and environments; distinguish deployment from runtime calls.','PlantUML, D2'],
  ['ArchiMate-style / layered architecture','Business and IT alignment','Use to connect business concerns, application services and supporting technology. Choose a view for a specific stakeholder concern; the playground does not validate an enterprise model.','PlantUML; D2 for a layer sketch'],
  ['System context','Scope and surroundings','Use early in discovery to agree the service boundary, users and external dependencies.','Graphviz, PlantUML, D2'],
  ['Component / container','Responsibilities and interfaces','Use when discussing how a solution is decomposed. State the abstraction level explicitly.','PlantUML, D2, diagrams.net'],
