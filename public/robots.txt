@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 Disallow: /vendor/
-Sitemap: https://mightora.github.io/architecture-lab.mightora.io/sitemap.xml
+Sitemap: https://architecture-lab.mightora.io/sitemap.xml

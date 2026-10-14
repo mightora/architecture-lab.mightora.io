@@ -32,6 +32,9 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install lxml==6.1.1 python-docx==1.2.0 python-pptx==1.0.2
       - run: python3 scripts/check-office.py
+      - run: node scripts/check-markdown.mjs
+      - run: node scripts/check-markdown-ui.mjs
+      - run: python3 scripts/check-markdown-office.py
       - run: npm run build
       - run: touch dist/.nojekyll
       - uses: actions/configure-pages@v5

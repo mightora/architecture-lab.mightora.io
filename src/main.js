@@ -1,3 +1,4 @@
+import {initMarkdownTool} from './markdown-tool.js';
 import './styles.css';
 import {platforms,examples,typeGuide} from './catalogue.js';
 import versions from './versions.json';
@@ -114,3 +115,5 @@ $('scenario-filter').value='Christmas dinner';
 const sharedScenario=scenarios.find(s=>s.id===new URLSearchParams(location.search).get('scenario'));if(sharedScenario){$('scenario-filter').value=sharedScenario.name;current=examples.find(e=>e.id===sharedScenario.start);}
 listExamples();selectExample(current.id);
 if(location.hash.startsWith('#project=')){try{let data=location.hash.slice(9).replaceAll('-','+').replaceAll('_','/');data+='='.repeat((4-data.length%4)%4);const bytes=Uint8Array.from(atob(data),c=>c.charCodeAt(0));restore(JSON.parse(strFromU8(inflateSync(bytes))));$('playground').scrollIntoView();}catch(e){error('Could not open the shared project: '+e.message);}}
+
+initMarkdownTool();

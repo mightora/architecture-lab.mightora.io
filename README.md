@@ -88,3 +88,9 @@ The gallery and playground explain the question each view answers and what it le
 Pushes to `main` build and deploy the static site with GitHub Actions. In repository Settings → Pages, select **GitHub Actions** as the source if GitHub does not enable it automatically. No backend or runtime credentials are required.
 
 For a fresh local checkout, run `npm ci`, `bash scripts/prepare-vendor.sh`, then `npm run build`. The vendor preparation downloads the pinned diagrams.net source recorded in `public/SOURCE-VERSIONS.json` and retains its licence files.
+
+## Markdown to Word
+
+The document tool accepts GitHub-flavoured Markdown and diagram fences from all eight platforms, plus SVG. It generates real editable DOCX paragraphs, headings, native lists, tables and drawing groups. Supported fence aliases and limits are shown in the UI. Unsupported diagrams retain source and diagnostic text; raw HTML is text and images become alt-text placeholders. No remote diagram resources or document uploads are used. Source inclusion is optional for successfully converted diagrams. Single-backtick inline code remains ordinary text.
+
+Run `node scripts/check-markdown.mjs` and `python3 scripts/check-markdown-office.py` for conversion and Word package checks. Browser integration and desktop Word visual QA remain separate checks.
