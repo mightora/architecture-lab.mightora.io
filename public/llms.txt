@@ -1,0 +1,30 @@
+# Mightora Architecture Lab
+
+A free static browser application for exploring solution architecture diagram types and open-source platforms.
+
+- 89 illustrative examples across PlantUML, Mermaid, Graphviz, D2, Vega-Lite, WaveDrom, BPMN/bpmn-js and diagrams.net.
+- Why diagrams as code: /#why-code
+- ArchiMate-style enterprise views and Archi resource: /#archimate
+- Diagram guide: /#guide
+- Examples and scenario filter: /#examples
+- Everyday examples: Christmas dinner (12 views), family holiday (12 views)
+- Platform information and home websites: /#platforms
+- Local playground: /#playground
+- Export capability and limits: /#exports
+- Author and platform attribution: /#credits
+- Third-party licences: /THIRD-PARTY-NOTICES.txt
+
+DOCX and PPTX exports use native DrawingML shapes and text, with limits for unsupported SVG features; they are not universally lossless. PDF uses the browser print dialog. Share links contain diagram source. Example measurements are fictional.
+
+## Guided scenarios
+
+The gallery defaults to scenario-first exploration with a shared brief, consistent roles and question-led views. Alternate diagram-type and platform browsing remains available. Every view explains what it answers and what it leaves out.
+
+- Christmas dinner: /?scenario=christmas-dinner#examples (12 views)
+- Family holiday: /?scenario=family-holiday#examples (12 views)
+- Birthday party: /?scenario=birthday-party#examples (10 views)
+- Moving house: /?scenario=moving-house#examples (10 views)
+- Online order: /?scenario=online-order#examples (10 views)
+- Professional service request: /?scenario=service-request#examples
+
+All people, events, budgets and dates are illustrative teaching examples.

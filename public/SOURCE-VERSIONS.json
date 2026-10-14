@@ -1,0 +1,16 @@
+{
+  "drawio": {
+    "commit": "9034053fba80a435e27d68d374bc564b83917ae9",
+    "source": "https://github.com/jgraph/drawio/tree/9034053fba80a435e27d68d374bc564b83917ae9"
+  },
+  "d2": {
+    "package": "@d2lang/d2@0.1.34",
+    "commit": "6a7b4837838a3907604a1d9eec57ee98b6f3cd01",
+    "source": "https://github.com/d2lang/d2/tree/6a7b4837838a3907604a1d9eec57ee98b6f3cd01",
+    "archive": "https://github.com/d2lang/d2/archive/6a7b4837838a3907604a1d9eec57ee98b6f3cd01.tar.gz"
+  },
+  "graphviz": {
+    "version": "16.1.0",
+    "source": "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/16.1.0/graphviz-16.1.0.tar.gz"
+  }
+}

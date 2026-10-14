@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.sites-runtime/
+*.tar.gz
+checks/
+
+public/vendor/drawio/
+public/vendor/plantuml/
+public/vendor/d2/
+public/vendor/wavedrom/
