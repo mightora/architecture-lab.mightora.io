@@ -29,7 +29,8 @@ function renderStory(){
  const selected=scenarioFor($('scenario-filter').value);$('scenario-story').hidden=browseMode!=='scenario'||!selected;
  document.querySelectorAll('#scenario-cards [data-scenario]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.scenario===selected?.name)));
  if(!selected)return;
- const related=examples.filter(e=>e.scenario===selected.name),questions=new Map();for(const e of related)if(!questions.has(questionFor(e)))questions.set(questionFor(e),e);
+ const related=examples.filter(e=>e.scenario===selected.name),questions=new Map();for(const e of related.filter(e=>e.type!=='Threat model'))if(!questions.has(questionFor(e)))questions.set(questionFor(e),e);
+ const threat=related.find(e=>e.type==='Threat model');if(threat){while(questions.size>8)questions.delete([...questions.keys()].at(-1));questions.set(questionFor(threat),threat);}
  $('scenario-story').innerHTML=`<div class="story-brief-main"><p class="eyebrow">THE SHARED STORY / ${esc(selected.kind)}</p><h3>${esc(selected.name)}</h3><p>${esc(selected.story)}</p><div class="story-people">${selected.people.map(p=>`<span>${esc(p)}</span>`).join('')}</div><ul>${selected.facts.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div><div class="story-questions"><h4>What would you like to understand?</h4>${[...questions].slice(0,9).map(([q,e])=>`<button data-example="${e.id}"><span>${esc(q)}</span><small>${esc(e.type)} · ${esc(platforms.find(p=>p.id===e.platform).name)} ↗</small></button>`).join('')}<p>Each view shows one part of this story. Explore the full collection below.</p></div>`;
 }
 function listExamples(){const rows=filterExamples(examples,{search:$('search').value,platform:$('platform-filter').value,type:$('type-filter').value,scenario:$('scenario-filter').value});$('example-count').textContent=`${rows.length} examples`;$('no-results').hidden=!!rows.length;

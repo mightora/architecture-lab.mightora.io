@@ -1,4 +1,5 @@
 import {solutionExamples} from './solution-examples.js';
+import {threatExamples} from './threat-examples.js';
 import {scenarioExamples} from './scenario-examples.js';
 import {everydayExamples} from './everyday-examples.js';
 export const platforms = [
@@ -63,9 +64,11 @@ export const examples=[
  e('drawio-service','drawio','Visual architecture','Sketch the service together','Use a visual editor in a workshop; rearrange shapes and discuss responsibilities.',drawio(['Requester','Power Apps','Dataverse'])),
  ...everydayExamples({e,uml,bpmn,drawio}),
  ...scenarioExamples({e,uml,bpmn}),
+ ...threatExamples({e,uml}),
  e('drawio-integration','drawio','Visual architecture','Sketch an integration','Arrange an integration landscape using native shapes and connectors.',drawio(['Power Automate','Integration API','Service Bus']),{scenario:'Integration'})
 ];
 export const typeGuide=[
+ ['Threat model','What could go wrong?','Illustrative samples identify assets, trust boundaries, threats, candidate safeguards and open questions. Not a security assessment; review and validate before real use.','PlantUML'],
  ['Core concepts model','Business vocabulary and relationships','Agree shared concepts and example cardinalities before selecting storage structures.','PlantUML, Mermaid'],
  ['Solution capabilities map','What the solution enables','Group stable business abilities and discuss scope and ownership without implying a workflow.','PlantUML, Graphviz'],
  ['High-level data flow','Information movements and stores','Trace data inputs, transformations, publication boundaries and outputs.','PlantUML, Mermaid'],

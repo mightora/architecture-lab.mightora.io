@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {examples,typeGuide} from '../src/catalogue.js';
 import {scenarioFor} from '../src/scenarios.js';
-const rows=examples.filter(e=>e.scenario==='Public application service');assert.equal(rows.length,12);assert.equal(new Set(rows.map(e=>e.type)).size,6);
+const rows=examples.filter(e=>e.scenario==='Public application service'&&e.type!=='Threat model');assert.equal(rows.length,12);assert.equal(new Set(rows.map(e=>e.type)).size,6);
 for(const type of new Set(rows.map(e=>e.type))){const group=rows.filter(e=>e.type===type);assert.equal(group.length,2);assert(group.some(e=>e.platform==='plantuml'));assert(group.some(e=>e.platform!=='plantuml'));assert(group.every(e=>e.question.length>20&&e.leavesOut.length>30));}
 for(const e of rows){assert(!/\b(?:TRACS|TRA)\b/i.test(JSON.stringify(e)));assert(!/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i.test(e.source));assert(!/https?:\/\//i.test(e.source));}
 assert.equal(scenarioFor('Public application service').start,'solution-concepts-plantuml');
