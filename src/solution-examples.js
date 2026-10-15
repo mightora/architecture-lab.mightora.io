@@ -7,35 +7,32 @@ export function solutionExamples({e,uml}){
  purpose:'Agree the business vocabulary and example cardinalities for a fictional application and case service before designing tables.',
  leavesOut:'Physical tables, column types, security roles and process order. Cardinalities are teaching assumptions, not domain rules.',
  plant:String.raw`title Core concepts model - fictional application service
-class "Case" as Case
-class "Application" as Application
-class "Interested party" as Party
-class "Submission" as Submission
-class "Document" as Document
-class "User account" as Account
-class "Representation" as Representation
+skinparam rectangleBackgroundColor White
+skinparam rectangleBorderColor Black
+rectangle "Case" as Case
+rectangle "Application" as Application
+rectangle "Participant" as Participant
+rectangle "Submission" as Submission
+rectangle "Document" as Document
+rectangle "User account" as Account
 Case "1" -- "1" Application : is opened for
-Case "1" -- "0..*" Party : involves
+Case "1" -- "0..*" Participant : involves
 Account "1" -- "0..*" Application : submits
-Party "1" -- "0..*" Submission : makes
+Participant "1" -- "0..*" Submission : makes
 Case "1" -- "0..*" Submission : receives
 Submission "1" -- "1..*" Document : contains
-Party "1" -- "0..*" Representation : permits
-Account "1" -- "0..*" Representation : acts through
 note bottom of Case
 An accepted application opens one case.
-An interested party may act without a representative.
+A participant is a person or organisation involved in a case.
 A submission contains at least one document in this story.
 end note`,
  platform:'mermaid',alt:`erDiagram
  CASE ||--|| APPLICATION : opened_for
  USER_ACCOUNT ||--o{ APPLICATION : submits
- CASE ||--o{ INTERESTED_PARTY : involves
- INTERESTED_PARTY ||--o{ SUBMISSION : makes
+ CASE ||--o{ PARTICIPANT : involves
+ PARTICIPANT ||--o{ SUBMISSION : makes
  CASE ||--o{ SUBMISSION : receives
- SUBMISSION ||--|{ DOCUMENT : contains
- INTERESTED_PARTY ||--o{ REPRESENTATION : permits
- USER_ACCOUNT ||--o{ REPRESENTATION : acts_through`
+ SUBMISSION ||--|{ DOCUMENT : contains`
  },{
  id:'capabilities',type:'Solution capabilities map',title:'Solution capabilities map',question:'What must the solution enable people to do?',
  purpose:'Group stable business abilities into self-service, case operations and supporting capabilities. Use the map to discuss scope and ownership.',
@@ -52,11 +49,11 @@ package "Self-service" {
 }
 package "Case operations" {
  rectangle "Triage applications" as Triage
- rectangle "Manage interested parties" as Parties
+ rectangle "Manage participants" as Participants
  rectangle "Review submissions" as Review
  rectangle "Record decisions" as Decide
- Triage -[hidden]down-> Parties
- Parties -[hidden]down-> Review
+ Triage -[hidden]down-> Participants
+ Participants -[hidden]down-> Review
  Review -[hidden]down-> Decide
 }
 package "Supporting capabilities" {
@@ -76,7 +73,7 @@ end note`,
  graph [rankdir=TB,compound=true];
  node [shape=box,style="rounded,filled",fillcolor="#ecfdf5",color="#059669",fontname="Arial"];
  subgraph cluster_self { label="Self-service"; browse [label="Browse published information"]; account [label="Manage account"]; apply [label="Submit application"]; upload [label="Provide supporting documents"]; browse -> account -> apply -> upload [style=invis]; }
- subgraph cluster_case { label="Case operations"; triage [label="Triage applications"]; parties [label="Manage interested parties"]; review [label="Review submissions"]; decision [label="Record decisions"]; triage -> parties -> review -> decision [style=invis]; }
+ subgraph cluster_case { label="Case operations"; triage [label="Triage applications"]; participants [label="Manage participants"]; review [label="Review submissions"]; decision [label="Record decisions"]; triage -> participants -> review -> decision [style=invis]; }
  subgraph cluster_support { label="Supporting capabilities"; notify [label="Notify people"]; docs [label="Manage documents"]; publish [label="Publish approved information"]; audit [label="Audit activity"]; notify -> docs -> publish -> audit [style=invis]; }
 }`
  },{
@@ -96,7 +93,7 @@ database "Case and application records\nDataverse" as Records
 folder "Submitted documents\nPrivate Azure Storage" as PrivateDocs
 folder "Approved publication copies\nPublic Azure Storage" as PublicDocs
 Applicant --> Portal : Application fields and supporting content
-Portal --> Records : Application and interested-party data
+Portal --> Records : Application and participant data
 Portal --> Documents : Authorised document request
 Documents --> PrivateDocs : File content
 Documents --> Records : Document reference and case link
@@ -114,7 +111,7 @@ Private submissions do not become public automatically.
 end note`,
  platform:'mermaid',alt:`flowchart TD
  Applicant[Applicant] -->|Application fields and documents| Portal[Power Pages portal]
- Portal -->|Application and party data| Records[(Dataverse case records)]
+ Portal -->|Application and participant data| Records[(Dataverse case records)]
  Portal -->|Authorised document request| Documents[Document service]
  Documents -->|File content| Private[(Private submitted documents)]
  Documents -->|Document reference and case link| Records
